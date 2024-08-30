@@ -3,7 +3,7 @@
 ### Data Creation
 - First, we need to prepare data i.e. cleaning, splitting into train, test, etc.
 
-      python data.py
+      python preprocess_data.py
 
 - It will take the default value for the following things:
     - data_path = 'data/IMDB Dataset.csv'
