@@ -82,3 +82,30 @@ Here, we set the default path for test.csv as data/test.csv and the model path a
 - This will host UI on 0.0.0.0:9999
 - You can try entering your text and get its sentiment. make sure you enter correct host and port on UI for hitting inference API.
 
+### HYPERPARAMETER TUNING:
+- For finding best parameters we can do hyperparameter tuning using script:
+      python hyperparameter_tuning.py
+
+- We have passed the values we want to test on hyperparameter_config.py. If you want to try new values you can make the modification on config
+- NOTE:
+      - values of D_MODEL must be divisible by values on NHEAD else error will be thrown as model expects this
+
+- CONFIG Details:
+      - BATCH_SIZE
+      - D_MODEL = embedding dimension
+      - NHEAD = number of heads on multi-layer attention
+      - NUM_ENCODER_LAYER = number of transformer encoder to use
+      - EPOCHS = training epochs
+      - SCORE_THRESHOLD = score to detemine the class labels.
+      - N_TRIAL = how many experiments do we want to conduct to find the optimal hyperparameters.
+
+- This will save two files:
+      - model/best_hyperparameter.json = will have optimal values for hyperparameters
+      - model/best_state_dict = will have optimal weights on the model layers.
+
+- Finally since we have the optimal weights, It can be utilized as:
+      from model import TransformersClassificationModel
+
+      model = TransformersClassificationModel(args)
+
+      model.load_state_dict(torch.load("model/best_state_dict", weights_only = True))

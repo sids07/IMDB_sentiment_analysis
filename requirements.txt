@@ -6,3 +6,4 @@ tqdm==4.66.5
 fastapi==0.112.2
 uvicorn==0.30.6
 gradio==4.42.0
+optuna==3.6.1

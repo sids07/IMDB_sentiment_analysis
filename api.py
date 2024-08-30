@@ -11,6 +11,7 @@ app = FastAPI()
 
 model_path = "model/model.pth"
 tokenizer_path = "model/tokenizer.json"
+
 inf = Inference(
     model_path = model_path,
     tokenizer_file_path = tokenizer_path
