@@ -1,73 +1,84 @@
-This is an assesment for DK AI Research Lab Deep Learning Internship.
+## This is an assessment for the DK AI Research Lab Deep Learning Internship.
 
-To replicate this first run data.py to preprocess, split data into train, test and finally create vocab and word2int json.
+### Data Creation
+- First, we need to prepare data i.e. cleaning, splitting into train, test, etc.
 
-you can simply run:
+      python data.py
 
-    python data.py
+- It will take the default value for the following things:
+    - data_path = 'data/IMDB Dataset.csv'
+    - test_size = 0.1
+    - tokenizer_output_path = 'model/tokenizer.json'
 
-It will assume following things:
-    data_path = 'data/IMDB Dataset.csv'
-    test_size = 0.1
-    tokenizer_output_path = 'model/tokenizer.json'
+- Now you can see three new files under the data folder i.e.
+    - data/clean_data.csv
+    - data/train.csv
+    - data/test.csv
+- One new file under the model folder
+    - model/tokenizer.json
 
-Now you can see three new files under data folder i.e. clean_data.csv, train.csv, test.csv and one new file under model folder i.e. tokenizer.json which is word2vec json.
+ - if you want to modify those default values you can do it using the following command:
+   
+       python data.py --file_path PATH_TO_IMDB_FILE.csv --test_size DESIRED_RATION --tokenizer_output_json PATH_TO_TOKENIZER.json
 
-Else if you want to change this three parameters that you can run:
-    python data.py --file_path PATH_TO_IMDB_FILE.csv --test_size DESIRED_RATION --tokenizer_output_json PATH_TO_TOKENIZER.json
+    - file_path = file for main csv
+    - test_size = ratio on which we want to create unseen data
+    - tokenizer_output = where we want our tokenizer.json file to be e.g. model/tokenizer.json
 
-- file_path = file for main csv
-- test_size = ratio on which we want to create unseen data
-- tokenizer_output = where we want our tokenizer.json file to be e.g. model/tokenizer.json
+Now, we have all our data and word2int JSON.
 
-Now, we have all our data and word2int json.
+### Training
 
-We can start training:
+- If default values were used for data creation. And, we want to train our model using default parameters. We can do so using the following command.
 
-If we have not provided any args and used default python data.py
-    python train.py
+      python train.py
+- For passing custom value we can run commands like:
+  
+      python train.py --train_file_path data/k/train.csv --word2int_file_path data/k/tokenizer.json --batch_size 32 --num_workers 2 --max_seq 256 --nhead 4 --num_encoder_layer 3 --epochs 1 --score_threshold 0.55 --save_model_path data/k/third_model.pth
 
-If we want custom variables:
-    python train.py --train_file_path data/k/train.csv --word2int_file_path data/k/tokenizer.json --batch_size 32 --num_workers 2 --max_seq 256 --nhead 4 --num_encoder_layer 3 --epochs 1 --score_threshold 0.55 --save_model_path data/k/third_model.pth
-
-- train_file_path = path to our train.csv
-- word2int_file_path = path to our word2vec json file/ tokenizer.json
-- batch_size = desired batch size for training
-- num_workers = number of workers to be assigned
-- max_seq = max sequence length allowed to process by model
-- nhead = number of heads of multi-head attention
-- num_encoder_layer = number of encoder layer to stack on model
-- epochs = total epochs for model training
-- score_threshold = score which determines the class value
-- save_model_path = path where we want our model i.e. model.pth
+    - train_file_path = path to our train.csv
+    - word2int_file_path = path to our word2vec json file/ tokenizer.json
+    - batch_size = desired batch size for training
+    - num_workers = number of workers to be assigned
+    - max_seq = max sequence length allowed to process by model
+    - nhead = number of heads of multi-head attention
+    - num_encoder_layer = number of encoder layers to stack on the model
+    - epochs = total epochs for model training
+    - score_threshold = score which determines the class value
+    - save_model_path = path where we want our model i.e. model.pth
 
 Make sure we know what we have set because some of them are required for inference and evaluation.
 
-Now, we want to evaluate our model on unseen data.
-    python evaluate.py
+### Evaluation of unseen data (OPTIONAL):
 
-For custom values:
-    python evaluate.py --model_file_path data/k/third_model.pth --test_file_path data/test.csv --word2int_file_path model/tokenizer.json --batch_size 32
+- NOTE: We must verify if we have a test.csv file that was not seen during the training procedure.
 
-Here we need to make sure model_file_path, word2int_file_path matches the path given during training.
+      python evaluate.py
+Here, we set the default path for test.csv as data/test.csv and the model path as model/model.pth, word2int json path as model/tokenizer.json. So, if we want to provide other paths we can do as below.
+- For custom values:
 
+      python evaluate.py --model_file_path data/k/third_model.pth --test_file_path data/test.csv --word2int_file_path model/tokenizer.json --batch_size 32
 
-For inferencing on new data:
-    python inference.py --text "I love watching movies"
+### Inference
 
-For custom path to model_file and word2int file
-    python inference.py --model_file_path PATH/TO/model.pth --word2int_file_path PATH/TO/tokenizer.json --text "I love watching movies"
+- For inferencing on new data:
 
+      python inference.py --text "I love watching movies"
 
-Now, since we have everything ready lets expose our API.
+- For the custom path to model_file and word2int file
 
-    uvicorn api:app --host 0.0.0.0 --port 9099
+      python inference.py --model_file_path PATH/TO/model.pth --word2int_file_path PATH/TO/tokenizer.json --text "I love watching movies"
 
-Once our API is on, go to next terminal and run our UI:
+### API Expose:
+- Now, since we have everything ready let's expose our API.
 
-    python gradio_app.py
+        uvicorn api:app --host 0.0.0.0 --port 9099
 
-This will host UI on 0.0.0.0:9999
+### UI using Gradio:
+- Once our API is on, go to the next terminal and run our UI:
 
-You can try entering your text and get its sentiment. make sure you enter correct host and port on UI for hitting inference API.
+      python gradio_app.py
+
+- This will host UI on 0.0.0.0:9999
+- You can try entering your text and get its sentiment. make sure you enter correct host and port on UI for hitting inference API.
 
