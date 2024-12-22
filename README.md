@@ -1,4 +1,4 @@
-## This is an assessment for the DK AI Research Lab Deep Learning Internship.
+## IMDB sentiment analysis using Transformers layer PyTorch
 
 ### Data Creation
 - First, we need to prepare data i.e. cleaning, splitting into train, test, etc.
